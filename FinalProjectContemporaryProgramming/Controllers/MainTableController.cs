@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FinalProjectContemporaryProgramming.Controllers
 {
-    public class MainTableController : Controller
+    public class MainTableController : ControllerBase
     {
         // GET: Controller1
         public ActionResult Index()
@@ -63,25 +63,6 @@ namespace FinalProjectContemporaryProgramming.Controllers
             }
         }
 
-        // GET: Controller1/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: Controller1/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+       
     }
 }
