@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FinalProjectContemporaryProgramming.Controllers
 {
-    public class MainTableController : Controller
+    public class MainTableController : ControllerBase
     {
      
 

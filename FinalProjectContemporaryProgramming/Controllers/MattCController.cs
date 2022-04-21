@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FinalProjectContemporaryProgramming.Controllers
 {
-    public class MattCController : Controller
+    public class MattCController : ControllerBase
     {
     
 
