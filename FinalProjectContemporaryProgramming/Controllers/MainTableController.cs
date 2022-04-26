@@ -13,7 +13,7 @@ namespace FinalProjectContemporaryProgramming.Controllers
     [Route("[controller]")]
     public class MainTableController : ControllerBase
     {
-        public class Main : Gabe
+        public class Main : GabeTable
         {
         }
 
@@ -25,9 +25,9 @@ namespace FinalProjectContemporaryProgramming.Controllers
 
         [HttpGet]
         [Route("All")]
-        public IEnumerable<Gabe> Get()
+        public IEnumerable<GabeTable> Get()
         {
-            return DBContext.Context.Gabe.ToList();
+            return DBContext.Context.GabeTable.ToList();
         }
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -50,7 +50,7 @@ namespace FinalProjectContemporaryProgramming.Controllers
 
         public ActionResult Post([FromQuery] string FullName, [FromQuery] DateTime Birthdate, [FromQuery] string CollegeProgram, [FromQuery] string YearInProgram)
         {
-            var added = new Gabe() { ID = GetNextAvailableID(), FullName = FullName, Birthdate = Birthdate, CollegeProgram = CollegeProgram, YearInProgram = YearInProgram};
+            var added = new GabeTable() { ID = GetNextAvailableID(), FullName = FullName, Birthdate = Birthdate, CollegeProgram = CollegeProgram, YearInProgram = YearInProgram};
             DBContext.Context.Add(added);
             return StatusCode(202, new Main());
         }
@@ -80,15 +80,15 @@ namespace FinalProjectContemporaryProgramming.Controllers
         {
             if (IdExists(id))
             {
-                DBContext.Context.Gabe.Remove(GetMainById(id));
+                DBContext.Context.GabeTable.Remove(GetMainById(id));
                 return Ok(new CustomResponse() { Title = "Successfully Deleted", Message = "Row with ID: " + id + " has been deleted." });
             }
             return StatusCode(404, new { id });
         }
-        private bool IdExists(int id) => DBContext.Context.Gabe.Any(e => e.ID.Equals(id));
-        private Gabe GetMainById(int id)
+        private bool IdExists(int id) => DBContext.Context.GabeTable.Any(e => e.ID.Equals(id));
+        private GabeTable GetMainById(int id)
         {
-            return DBContext.Context.Gabe.First(e => e.ID == id);
+            return DBContext.Context.GabeTable.First(e => e.ID == id);
         }
     }
    
