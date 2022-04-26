@@ -17,24 +17,32 @@ namespace FinalProjectContemporaryProgramming.Controllers
         {
         }
 
+        private CustomResponse NotFoundMessage = new CustomResponse()
+        {
+            Title = "Not Found",
+            Message = "There is no row with that ID"
+        };
 
         [HttpGet]
         [Route("All")]
-        public IEnumerable<Main> Get()
+        public IEnumerable<Gabe> Get()
         {
-            List<Main> ret = new List<Main>();
-            for(int i = 0; i < 5; i++ )
-            {
-                ret.Add(new Main()  { ID = i, FullName = "Gabriel Phan" }) ;
-            }
-            return ret;
+            return DBContext.Context.Gabe.ToList();
         }
         [HttpGet]
-        [Route("MainID")]
-        public Main Get([FromQuery] int id)
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status302Found)]
+        [Route("ByID")]
+        public ActionResult Get([FromQuery] int id)
         {
-            Debug.WriteLine("Cheerio m8");
-            return new Main() { ID = id, FullName = "Gabriel Phan" };
+            if (IdExists(id))
+            {
+                return Ok(GetMainById(id));
+            }
+            else
+            {
+                return StatusCode(StatusCodes.Status404NotFound, NotFoundMessage);
+            }
         }
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
@@ -42,10 +50,28 @@ namespace FinalProjectContemporaryProgramming.Controllers
 
         public ActionResult Post([FromQuery] string FullName, [FromQuery] DateTime Birthdate, [FromQuery] string CollegeProgram, [FromQuery] string YearInProgram)
         {
-           return StatusCode(202, new Main());
+            var added = new Gabe() { ID = GetNextAvailableID(), FullName = FullName, Birthdate = Birthdate, CollegeProgram = CollegeProgram, YearInProgram = YearInProgram};
+            DBContext.Context.Add(added);
+            return StatusCode(202, new Main());
         }
 
-
+        [HttpPatch]
+        [ProducesResponseType(StatusCodes.Status202Accepted)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult Update([FromQuery] int id, [FromQuery] string FullName = null, [FromQuery] DateTime? Birthdate = null, [FromQuery] string CollegeProgram = null, [FromQuery] string YearInProgram = null)
+        {
+            if (!IdExists(id))
+                return StatusCode(404, NotFoundMessage);
+            Debug.WriteLine("Uhhhh update by ID?");
+            return StatusCode(202, new { id, FullName, Birthdate, CollegeProgram });
+        }
+        private int GetNextAvailableID()
+        {
+            int i = 0;
+            while (IdExists(i))
+                i++;
+            return i;
+        }
 
         [HttpDelete]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -54,19 +80,16 @@ namespace FinalProjectContemporaryProgramming.Controllers
         {
             if (IdExists(id))
             {
-                return Ok(new Main() { ID = id });
+                DBContext.Context.Gabe.Remove(GetMainById(id));
+                return Ok(new CustomResponse() { Title = "Successfully Deleted", Message = "Row with ID: " + id + " has been deleted." });
             }
             return StatusCode(404, new { id });
         }
-        private bool IdExists(int id)
+        private bool IdExists(int id) => DBContext.Context.Gabe.Any(e => e.ID.Equals(id));
+        private Gabe GetMainById(int id)
         {
-            return true;
+            return DBContext.Context.Gabe.First(e => e.ID == id);
         }
-        private Main GetMainById(int id)
-        {
-            return new Main() { ID = id };
-        }
-
     }
    
 }
