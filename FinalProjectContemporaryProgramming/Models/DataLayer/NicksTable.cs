@@ -31,6 +31,6 @@ namespace FinalProjectContemporaryProgramming.Models.DataLayer
         [StringLength(50)]
         public string FavoriteClass { get; set; }
         
-        public bool IsALiar { get; set; }
+        public bool IAmALiar { get; set; }
     }
 }
