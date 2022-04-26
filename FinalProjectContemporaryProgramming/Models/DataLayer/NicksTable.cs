@@ -20,15 +20,17 @@ namespace FinalProjectContemporaryProgramming.Models.DataLayer
         [Required]
         [StringLength(50)]
         public string LastName { get; set; }
-        [Required]
+        //[Required]
         [Column("FavoriteTA")]
         [StringLength(50)]
         public string FavoriteTa { get; set; }
-        [Required]
+        //[Required]
         [StringLength(50)]
         public string FavoriteTeacher { get; set; }
-        [Required]
+        //[Required]
         [StringLength(50)]
         public string FavoriteClass { get; set; }
+        
+        public bool IsALiar { get; set; }
     }
 }

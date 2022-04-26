@@ -51,7 +51,7 @@ namespace FinalProjectContemporaryProgramming.Controllers
         [Route("All")]
         public IEnumerable<Nick> Get()
         {
-            return DBContext.Context.NicksTable.Select(e => new Nick(e));
+            return DBContext.Context.NickTable.Select(e => new Nick(e));
         }
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -118,15 +118,15 @@ namespace FinalProjectContemporaryProgramming.Controllers
         {
             if(IdExists(id))
             {
-                DBContext.Context.NicksTable.Remove(GetNickById(id));
+                DBContext.Context.NickTable.Remove(GetNickById(id));
                 return Ok(new CustomResponse() {Title="Successfully Deleted",Message="Row with ID: "+id+" has been deleted." });
             }
             return StatusCode(404,NotFoundMessage);
         }
-        private bool IdExists(int id) => DBContext.Context.NicksTable.Any(e => e.Id.Equals(id));
+        private bool IdExists(int id) => DBContext.Context.NickTable.Any(e => e.Id.Equals(id));
         private NicksTable GetNickById(int id)
         {
-            return DBContext.Context.NicksTable.First(e => e.Id == id);
+            return DBContext.Context.NickTable.First(e => e.Id == id);
         }
     }
 }

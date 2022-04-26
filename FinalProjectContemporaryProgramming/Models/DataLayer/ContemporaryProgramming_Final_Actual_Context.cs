@@ -20,10 +20,10 @@ namespace FinalProjectContemporaryProgramming.Models.DataLayer
         {
         }
 
-        public virtual DbSet<Gabe> Gabe { get; set; }
+        public virtual DbSet<GabeTable> GabeTable { get; set; }
         public virtual DbSet<JohnTable> JohnTable { get; set; }
         public virtual DbSet<MattTable> MattTable { get; set; }
-        public virtual DbSet<NicksTable> NicksTable { get; set; }
+        public virtual DbSet<NicksTable> NickTable { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -39,7 +39,7 @@ namespace FinalProjectContemporaryProgramming.Models.DataLayer
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Gabe>(entity =>
+            modelBuilder.Entity<GabeTable>(entity =>
             {
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
