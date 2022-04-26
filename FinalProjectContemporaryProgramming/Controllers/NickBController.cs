@@ -6,6 +6,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using FinalProjectContemporaryProgramming.Models.DataLayer;
+using Microsoft.EntityFrameworkCore;
+
 namespace FinalProjectContemporaryProgramming.Controllers
 
 {
@@ -13,61 +15,39 @@ namespace FinalProjectContemporaryProgramming.Controllers
     [Route("[controller]")]
     public class NickBController : ControllerBase
     {
-        public class Nick
-        {
-            public int ID { get; set; }
-            public string FirstName { get; set; }
-            public string LastName { get; set; }
 
-            public string FavoriteTA { get; set; } = "Monish Chamlagai";
-            public string FavoriteTeacher { get; set; } = "Awais Shoaib";
-            public string FavoriteClass { get; set; }= "Contemporary Programming";
-            //public bool IsALiar { get; set; }
-            public Nick(NicksTable n)
-            {
-                ID = n.Id;
-                FirstName = n.FirstName;
-                LastName = n.LastName;
-                FavoriteTA = n.FavoriteTa;
-                FavoriteTeacher = n.FavoriteTeacher;
-                FavoriteClass = n.FavoriteClass;
-            }
-            public Nick()
-            {
-
-            }
-        }
-        private CustomResponse NotFoundMessage=new CustomResponse()
+        private object NotFoundMessage=new
         {
             Title = "Not Found",
             Message = "There is no row with that ID"
         };
-        public Nick TheBestNick = new Nick();
-        /// <summary>
-        /// gets every element in the table
-        /// </summary>
-        /// <returns></returns>
+
         [HttpGet]
         [Route("All")]
-        public IEnumerable<Nick> Get()
-        {
-            return DBContext.Context.NicksTable.Select(e => new Nick(e));
-        }
+        public DbSet<NicksTable> Get() => DBContext.Context.NickTable;
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status302Found)]
         [Route("ByID")]
-        public ActionResult Get([FromQuery] int id)
+        public ActionResult Get([FromQuery] int id)=> IdExists(id)? Ok(GetNickById(id)): StatusCode(404, NotFoundMessage);
+     
+        private ObjectResult CheckForLies(string FavoriteTA, string FavoriteTeacher, String FavoriteClass)
         {
-            if (IdExists(id))
+            if (FavoriteTA != "Monish Chamlagai")
             {
-                return Ok(GetNickById(id));
+                return StatusCode(406, new { Title = "Invalid Favorite TA", Message = $"Their Favorite TA clearly isn't '{FavoriteTA}'. If you wish to fill this table with lies then please mark this person as a liar. " });
             }
-            else
+            else if (FavoriteTeacher != "Awais Shoaib")
             {
-                return StatusCode(StatusCodes.Status404NotFound,NotFoundMessage);
+                return StatusCode(406, new { Title = "Invalid Favorite Teacher", Message = $"Their Favorite Teacher clearly isn't '{FavoriteTeacher}'. If you wish to fill this table with lies then please mark this person as a liar. " });
             }
+            else if (FavoriteClass != "Contemporary Programming")
+            {
+                return StatusCode(406, new { Title = "Invalid Favorite Class", Message = $"Their Favorite Class clearly isn't '{FavoriteClass}'. if you wish to fill this table with lies then please mark this person as a liar. " });
+            }
+            return Ok(null);
         }
+
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status406NotAcceptable)]
@@ -75,21 +55,14 @@ namespace FinalProjectContemporaryProgramming.Controllers
         {
             if (!IsALiar)
             {
-                if (FavoriteTA != TheBestNick.FavoriteTA)
-                {
-                    return StatusCode(406, new CustomResponse() { Title = "Invalid Favorite TA", Message = $"Their Favorite TA clearly isn't '{FavoriteTA}'. If you wish to fill this table with lies then please mark this person as a liar. "});
-                }else if (FavoriteTeacher != TheBestNick.FavoriteTeacher)
-                {
-                    return StatusCode(406, new CustomResponse() { Title = "Invalid Favorite Teacher", Message = $"Their Favorite Teacher clearly isn't '{FavoriteTeacher}'. If you wish to fill this table with lies then please mark this person as a liar. " });
-                }
-                else if(FavoriteClass != TheBestNick.FavoriteClass)
-                {
-                    return StatusCode(406, new CustomResponse() { Title = "Invalid Favorite Class", Message = $"Their Favorite Class clearly isn't '{FavoriteClass}'. if you wish to fill this table with lies then please mark this person as a liar. " });
-                }
+                var islying =CheckForLies(FavoriteTA, FavoriteTeacher, FavoriteClass);
+                if (islying.StatusCode == 406)
+                    return islying;
             }
-            var added = new NicksTable() { Id = GetNextAvailableID(),FirstName=FirstName,LastName=LastName,FavoriteTa=FavoriteTA,FavoriteTeacher=FavoriteTeacher,FavoriteClass=FavoriteClass };
+            var added = new NicksTable() { Id = GetNextAvailableID(),FirstName=FirstName,LastName=LastName,FavoriteTa=FavoriteTA,FavoriteTeacher=FavoriteTeacher,FavoriteClass=FavoriteClass,IAmALiar=IsALiar };
             DBContext.Context.Add(added);
-            return StatusCode(202,new Nick(added));
+            DBContext.Context.SaveChanges();
+            return StatusCode(202,added);
         }
         [HttpPatch]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
@@ -98,6 +71,12 @@ namespace FinalProjectContemporaryProgramming.Controllers
         {
             if (!IdExists(id))
                 return StatusCode(404,NotFoundMessage);
+            if (!IsALiar) { 
+                var islying = CheckForLies(FavoriteTA, FavoriteTeacher, FavoriteClass);
+                if (islying.StatusCode == 406)
+                    return islying;
+            }
+            
             Debug.WriteLine("Update by id idk man");
             return StatusCode(202, new {id,FirstName, LastName,FavoriteTA});
         }
@@ -114,19 +93,17 @@ namespace FinalProjectContemporaryProgramming.Controllers
         [HttpDelete]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<Nick> Delete([FromQuery]int id)
+        public ActionResult Delete([FromQuery]int id)
         {
             if(IdExists(id))
             {
-                DBContext.Context.NicksTable.Remove(GetNickById(id));
-                return Ok(new CustomResponse() {Title="Successfully Deleted",Message="Row with ID: "+id+" has been deleted." });
+                Get().Remove(GetNickById(id));
+                DBContext.Context.SaveChanges();
+                return Ok(new {Title="Successfully Deleted",Message="Row with ID: "+id+" has been deleted." });
             }
             return StatusCode(404,NotFoundMessage);
         }
-        private bool IdExists(int id) => DBContext.Context.NicksTable.Any(e => e.Id.Equals(id));
-        private NicksTable GetNickById(int id)
-        {
-            return DBContext.Context.NicksTable.First(e => e.Id == id);
-        }
+        private bool IdExists(int id) => Get().Any(e => e.Id.Equals(id));
+        private NicksTable GetNickById(int id) =>Get().First(e => e.Id == id);
     }
 }

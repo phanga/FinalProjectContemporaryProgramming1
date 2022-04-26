@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FinalProjectContemporaryProgramming.Models.DataLayer
 {
-    public partial class Gabe
+    public partial class GabeTable
     {
         [Key]
         [Column("ID")]
