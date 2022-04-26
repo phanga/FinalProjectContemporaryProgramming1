@@ -1,16 +1,26 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using FinalProjectContemporaryProgramming.Data;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
 using System.Linq;
-using System.Threading.Tasks;
-
 namespace FinalProjectContemporaryProgramming.Controllers
 {
+    [ApiController]
+    [Route("[controller]")]
     public class MattCController : ControllerBase
     {
-    
+        private readonly ILogger<MattCController> _logger;
+        private readonly FinalProjectContext _context;
 
-       
+        public MattCController(ILogger<MattCController> logger, FinalProjectContext context)
+        {
+            _logger = logger;
+            _context = context;
+        }
+
+        [HttpGet]
+        public IActionResult Get()
+        {
+            return Ok(_context.TheMattsTable.ToList());
+        }
     }
 }

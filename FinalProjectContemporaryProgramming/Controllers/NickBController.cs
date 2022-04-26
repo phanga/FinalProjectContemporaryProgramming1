@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using FinalProjectContemporaryProgramming.Models.DataLayer;
+using FinalProjectContemporaryProgramming.Models;
 namespace FinalProjectContemporaryProgramming.Controllers
 
 {
@@ -51,7 +51,7 @@ namespace FinalProjectContemporaryProgramming.Controllers
         [Route("All")]
         public IEnumerable<Nick> Get()
         {
-            return DBContext.Context.NicksTable.Select(e => new Nick(e));
+            return DBContext._context.TheNicksTable.Select(e => new Nick(e));
         }
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -88,7 +88,7 @@ namespace FinalProjectContemporaryProgramming.Controllers
                 }
             }
             var added = new NicksTable() { Id = GetNextAvailableID(),FirstName=FirstName,LastName=LastName,FavoriteTa=FavoriteTA,FavoriteTeacher=FavoriteTeacher,FavoriteClass=FavoriteClass };
-            DBContext.Context.Add(added);
+            DBContext._context.Add(added);
             return StatusCode(202,new Nick(added));
         }
         [HttpPatch]
@@ -118,15 +118,15 @@ namespace FinalProjectContemporaryProgramming.Controllers
         {
             if(IdExists(id))
             {
-                DBContext.Context.NicksTable.Remove(GetNickById(id));
+                DBContext._context.TheNicksTable.Remove(GetNickById(id));
                 return Ok(new CustomResponse() {Title="Successfully Deleted",Message="Row with ID: "+id+" has been deleted." });
             }
             return StatusCode(404,NotFoundMessage);
         }
-        private bool IdExists(int id) => DBContext.Context.NicksTable.Any(e => e.Id.Equals(id));
+        private bool IdExists(int id) => DBContext._context.TheNicksTable.Any(e => e.Id.Equals(id));
         private NicksTable GetNickById(int id)
         {
-            return DBContext.Context.NicksTable.First(e => e.Id == id);
+            return DBContext._context.TheNicksTable.First(e => e.Id == id);
         }
     }
 }
