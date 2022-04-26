@@ -13,7 +13,7 @@ namespace FinalProjectContemporaryProgramming.Models.DataLayer
     {
         [Key]
         [Column("ID")]
-        public int Id { get; set; }
+        public int ID { get; set; }
         [Required]
         [StringLength(100)]
         public string FullName { get; set; }

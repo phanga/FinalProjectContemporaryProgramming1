@@ -41,7 +41,7 @@ namespace FinalProjectContemporaryProgramming.Models.DataLayer
         {
             modelBuilder.Entity<Gabe>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.Property(e => e.ID).ValueGeneratedNever();
 
                 entity.Property(e => e.CollegeProgram).IsUnicode(false);
 
