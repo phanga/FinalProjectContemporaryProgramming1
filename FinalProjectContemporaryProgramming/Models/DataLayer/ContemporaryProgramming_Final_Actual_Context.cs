@@ -33,7 +33,7 @@ namespace FinalProjectContemporaryProgramming.Models.DataLayer
                     .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
                     .AddJsonFile("appsettings.json")
                     .Build();
-                optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+                optionsBuilder.UseSqlServer($"Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename='{DBContext.MdfFileLocation}';Integrated Security=True");//configuration.GetConnectionString("DefaultConnection"));
             }
         }
 
