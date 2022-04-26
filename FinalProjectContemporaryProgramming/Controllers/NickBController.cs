@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-
+using FinalProjectContemporaryProgramming.Models.DataLayer;
 namespace FinalProjectContemporaryProgramming.Controllers
 
 {
@@ -33,6 +33,7 @@ namespace FinalProjectContemporaryProgramming.Controllers
         [Route("All")]
         public IEnumerable<Nick> Get()
         {
+            
             List<Nick> ret = new List<Nick>();
             for (int i = 0; i < 5; i++)
             {
