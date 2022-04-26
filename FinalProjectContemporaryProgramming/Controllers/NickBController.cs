@@ -20,7 +20,23 @@ namespace FinalProjectContemporaryProgramming.Controllers
         {
             Title = "Not Found",
             Message = "There is no row with that ID"
-        };
+        };     
+        private ObjectResult CheckForLies(string FavoriteTA, string FavoriteTeacher, String FavoriteClass)
+        {
+            if (FavoriteTA!=null && FavoriteTA != "Monish Chamlagai")
+            {
+                return StatusCode(406, new { Title = "Invalid Favorite TA", Message = $"Their Favorite TA clearly isn't '{FavoriteTA}'. If you wish to fill this table with lies then please mark this person as a liar. " });
+            }
+            else if (FavoriteTeacher != null && FavoriteTeacher != "Awais Shoaib")
+            {
+                return StatusCode(406, new { Title = "Invalid Favorite Teacher", Message = $"Their Favorite Teacher clearly isn't '{FavoriteTeacher}'. If you wish to fill this table with lies then please mark this person as a liar. " });
+            }
+            else if (FavoriteClass != null && FavoriteClass != "Contemporary Programming")
+            {
+                return StatusCode(406, new { Title = "Invalid Favorite Class", Message = $"Their Favorite Class clearly isn't '{FavoriteClass}'. if you wish to fill this table with lies then please mark this person as a liar. " });
+            }
+            return Ok(null);
+        }
 
         [HttpGet]
         [Route("All")]
@@ -29,24 +45,8 @@ namespace FinalProjectContemporaryProgramming.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status302Found)]
         [Route("ByID")]
-        public ActionResult Get([FromQuery] int id)=> IdExists(id)? Ok(GetNickById(id)): StatusCode(404, NotFoundMessage);
-     
-        private ObjectResult CheckForLies(string FavoriteTA, string FavoriteTeacher, String FavoriteClass)
-        {
-            if (FavoriteTA != "Monish Chamlagai")
-            {
-                return StatusCode(406, new { Title = "Invalid Favorite TA", Message = $"Their Favorite TA clearly isn't '{FavoriteTA}'. If you wish to fill this table with lies then please mark this person as a liar. " });
-            }
-            else if (FavoriteTeacher != "Awais Shoaib")
-            {
-                return StatusCode(406, new { Title = "Invalid Favorite Teacher", Message = $"Their Favorite Teacher clearly isn't '{FavoriteTeacher}'. If you wish to fill this table with lies then please mark this person as a liar. " });
-            }
-            else if (FavoriteClass != "Contemporary Programming")
-            {
-                return StatusCode(406, new { Title = "Invalid Favorite Class", Message = $"Their Favorite Class clearly isn't '{FavoriteClass}'. if you wish to fill this table with lies then please mark this person as a liar. " });
-            }
-            return Ok(null);
-        }
+        public ActionResult Get([FromQuery] int id) => IdExists(id) ? Ok(GetNickById(id)) : StatusCode(404, NotFoundMessage);
+
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
@@ -67,18 +67,38 @@ namespace FinalProjectContemporaryProgramming.Controllers
         [HttpPatch]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult Update([FromQuery] int id, [FromQuery] string FirstName=null, [FromQuery] string LastName=null, [FromQuery] string FavoriteTA = null, [FromQuery] string FavoriteTeacher = null, [FromQuery] string FavoriteClass = null, [FromQuery] bool IsALiar = false)
+        public ActionResult Update([FromQuery] int id, [FromQuery] string FirstName=null, [FromQuery] string LastName=null, [FromQuery] string FavoriteTA = null, [FromQuery] string FavoriteTeacher = null, [FromQuery] string FavoriteClass = null, [FromQuery] bool? IsALiar = null)
         {
             if (!IdExists(id))
                 return StatusCode(404,NotFoundMessage);
-            if (!IsALiar) { 
-                var islying = CheckForLies(FavoriteTA, FavoriteTeacher, FavoriteClass);
-                if (islying.StatusCode == 406)
-                    return islying;
+            var n = GetNickById(id);
+            var islying = CheckForLies(FavoriteTA, FavoriteTeacher, FavoriteClass);
+            if (IsALiar.HasValue) {
+                if (!IsALiar.Value)
+                {
+                    if (islying.StatusCode == 406)
+                        return islying;
+                }
             }
-            
-            Debug.WriteLine("Update by id idk man");
-            return StatusCode(202, new {id,FirstName, LastName,FavoriteTA});
+            else if(!n.IAmALiar && islying.StatusCode == 406)
+            {
+                return islying;
+            }
+            if(FirstName!=null)
+                n.FirstName=FirstName;
+            if(LastName!=null)
+                n.LastName=LastName;
+            if(FavoriteClass!=null)
+                n.FavoriteClass=FavoriteClass;
+            if(FavoriteTeacher!=null)
+                n.FavoriteTeacher=FavoriteTeacher;
+            if(FavoriteTA != null)
+                n.FavoriteTa = FavoriteTA;
+            if(IsALiar.HasValue)
+                n.IAmALiar = IsALiar.Value;
+            DBContext.Context.NickTable.Update(n);
+            DBContext.Context.SaveChanges();
+            return StatusCode(202, n);
         }
         private int GetNextAvailableID()
         {
