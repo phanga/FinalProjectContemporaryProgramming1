@@ -23,12 +23,7 @@ namespace FinalProjectContemporaryProgramming.Controllers
             Message = "There is no row with that ID"
         };
 
-        [HttpGet]
-        [Route("All")]
-        public IEnumerable<GabeTable> Get()
-        {
-            return DBContext.Context.GabeTable.ToList();
-        }
+        
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status302Found)]
