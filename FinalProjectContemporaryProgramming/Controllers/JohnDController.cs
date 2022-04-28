@@ -41,7 +41,7 @@ namespace FinalProjectContemporaryProgramming.Controllers
         [ProducesResponseType(StatusCodes.Status406NotAcceptable)]
         public ActionResult Post([FromQuery] string FirstName, [FromQuery] string LastName, [FromQuery] string FavoriteSport, [FromQuery] string FavoriteBoardGame, [FromQuery] string FavoriteVideoGame, [FromQuery] string FavoriteTVShow)
         {
-            var added = new JohnTable() { Id = GetNextAvailableID(), FirstName = FirstName, LastName = LastName, FavoriteSport = FavoriteSport, FavoriteBoardGame = FavoriteBoardGame, FavoriteVideoGame = FavoriteVideoGame, FavoriteTvshow = FavoriteTVShow };
+            var added = new JohnTable() { Id = GetNextAvailableID(), FirstName = FirstName, LastName = LastName, FavoriteSport = FavoriteSport, FavoriteVideoGame = FavoriteVideoGame, FavoriteTvshow = FavoriteTVShow };
             DBContext.Context.Add(added);
             DBContext.Context.SaveChanges();
             return StatusCode(StatusCodes.Status202Accepted, added);
