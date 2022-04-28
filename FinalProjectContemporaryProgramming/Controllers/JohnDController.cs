@@ -51,7 +51,6 @@ namespace FinalProjectContemporaryProgramming.Controllers
         }
 
         [HttpPatch]
-        [Route("ByID")]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status406NotAcceptable)]
         public ActionResult Update([FromQuery] int id, [FromQuery] string FirstName = null, [FromQuery] string LastName = null, [FromQuery] string FavoriteSport = null, [FromQuery] string FavoriteBoardGame = null, [FromQuery] string FavoriteVideoGame = null, [FromQuery] string FavoriteTVShow = null)
