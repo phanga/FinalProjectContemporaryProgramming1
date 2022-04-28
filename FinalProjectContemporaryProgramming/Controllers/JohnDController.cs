@@ -25,6 +25,9 @@ namespace FinalProjectContemporaryProgramming.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IEnumerable<JohnTable> Get() => DBContext.Context.JohnTable;
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult Get([FromQuery] int id)
         {
             if (IdExists(id))
