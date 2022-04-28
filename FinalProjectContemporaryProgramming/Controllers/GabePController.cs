@@ -11,7 +11,7 @@ namespace FinalProjectContemporaryProgramming.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class MainTableController : ControllerBase
+    public class GabePController : ControllerBase
     {
         public class Main : GabeTable
         {
@@ -48,9 +48,19 @@ namespace FinalProjectContemporaryProgramming.Controllers
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status406NotAcceptable)]
 
-        public ActionResult Post([FromQuery] string FullName, [FromQuery] DateTime Birthdate, [FromQuery] string CollegeProgram, [FromQuery] string YearInProgram)
+        public ActionResult Post(
+            [FromQuery] string FullName, 
+            [FromQuery] DateTime Birthdate, 
+            [FromQuery] string CollegeProgram, 
+            [FromQuery] string YearInProgram
+            )
         {
-            var added = new GabeTable() { ID = GetNextAvailableID(), FullName = FullName, Birthdate = Birthdate, CollegeProgram = CollegeProgram, YearInProgram = YearInProgram };
+            var added = new GabeTable() { ID = GetNextAvailableID(), 
+                FullName = FullName, 
+                Birthdate = Birthdate, 
+                CollegeProgram = CollegeProgram, 
+                YearInProgram = YearInProgram };
+
             DBContext.Context.Add(added);
             DBContext.Context.SaveChanges();
             return StatusCode(202, added);
@@ -59,12 +69,22 @@ namespace FinalProjectContemporaryProgramming.Controllers
         [HttpPatch]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult Update([FromQuery] int id, [FromQuery] string FullName = null, [FromQuery] DateTime? Birthdate = null, [FromQuery] string CollegeProgram = null, [FromQuery] string YearInProgram = null)
+        public ActionResult Update(
+            [FromQuery] int id, 
+            [FromQuery] string FullName = null, 
+            [FromQuery] DateTime? Birthdate = null, 
+            [FromQuery] string CollegeProgram = null, 
+            [FromQuery] string YearInProgram = null)
         {
             if (!IdExists(id))
                 return StatusCode(404, NotFoundMessage);
-            Debug.WriteLine("Uhhhh update by ID?");
-            return StatusCode(202, new { id, FullName, Birthdate, CollegeProgram });
+            return StatusCode(202, new { 
+                id, 
+                FullName, 
+                Birthdate, 
+                CollegeProgram,
+                YearInProgram
+            });
         }
         private int GetNextAvailableID()
         {
