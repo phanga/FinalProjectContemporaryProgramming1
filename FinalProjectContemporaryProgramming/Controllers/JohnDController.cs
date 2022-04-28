@@ -52,8 +52,8 @@ namespace FinalProjectContemporaryProgramming.Controllers
             
             var j = GetJohnById(id);
             
-            if (FirstName != null)
-                j.FirstName = FirstName;
+            if (Firstname != null)
+                j.FirstName = Firstname;
             if (LastName != null)
                 j.LastName = LastName;
             if (FavoriteSport != null)
