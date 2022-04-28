@@ -32,17 +32,14 @@ namespace FinalProjectContemporaryProgramming.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status302Found)]
-        [Route("ByID")]
-        public ActionResult Get([FromQuery] int id)
+        
+        public ActionResult Get([FromQuery] int? id)
         {
-            if (IdExists(id))
+            if (id.HasValue && id.Value != 0)
             {
-                return Ok(GetMainById(id));
+                return IdExists(id.Value) ? Ok(GetMainById(id.Value)) : StatusCode(404, NotFoundMessage);
             }
-            else
-            {
-                return StatusCode(StatusCodes.Status404NotFound, NotFoundMessage);
-            }
+            return Ok(DBContext.Context.GabeTable.Take(5));
         }
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
@@ -92,16 +89,15 @@ namespace FinalProjectContemporaryProgramming.Controllers
             DBContext.Context.GabeTable.Update(m);
             DBContext.Context.SaveChanges();
             return StatusCode(202, m);
-        
         }
         private int GetNextAvailableID()
         {
-            int i = 0;
+            int i = 1;
             while (IdExists(i))
                 i++;
             return i;
         }
-
+       
         [HttpDelete]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

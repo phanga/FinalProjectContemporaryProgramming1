@@ -25,6 +25,9 @@ namespace FinalProjectContemporaryProgramming.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IEnumerable<JohnTable> Get() => DBContext.Context.JohnTable;
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult Get([FromQuery] int id)
         {
             if (IdExists(id))
@@ -48,7 +51,6 @@ namespace FinalProjectContemporaryProgramming.Controllers
         }
 
         [HttpPatch]
-        [Route("ByID")]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status406NotAcceptable)]
         public ActionResult Update([FromQuery] int id, [FromQuery] string FirstName = null, [FromQuery] string LastName = null, [FromQuery] string FavoriteSport = null, [FromQuery] string FavoriteVideoGame = null, [FromQuery] string FavoriteTVShow = null)
@@ -92,9 +94,9 @@ namespace FinalProjectContemporaryProgramming.Controllers
                 DBContext.Context.JohnTable.Remove(GetJohnById(id));
                 DBContext.Context.SaveChanges();
                 return Ok(new CustomResponse() {Title = "Successfully Deleted", Message = "Row with ID: " + id + " has been deleted"});
+                DBContext.Context.SaveChanges();
             }
             return StatusCode(404, NotFoundMessage);
-            
         }
 
         private bool IdExists(int id) => DBContext.Context.JohnTable.Any(e => e.Id == id);

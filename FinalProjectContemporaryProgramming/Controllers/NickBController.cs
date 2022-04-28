@@ -38,16 +38,16 @@ namespace FinalProjectContemporaryProgramming.Controllers
             return Ok(null);
         }
 
-        [HttpGet]
-        [Route("All")]
-        public DbSet<NicksTable> Get() => DBContext.Context.NickTable;
+      //  [HttpGet]
+     //   [Route("All")]
+        //private DbSet<NicksTable> aGet() => DBContext.Context.NickTable;
+       
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status302Found)]
-        [Route("ByID")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult Get([FromQuery] int? id)
         {
-            if (id.HasValue && id.Value != 0)
+            if(id.HasValue && id.Value != 0)
             {
                 return IdExists(id.Value) ? Ok(GetNickById(id.Value)) : StatusCode(404, NotFoundMessage);
             }
@@ -109,7 +109,7 @@ namespace FinalProjectContemporaryProgramming.Controllers
         }
         private int GetNextAvailableID()
         {
-            int i = 0;
+            int i = 1;
             while (IdExists(i))
                 i++;
             return i;
@@ -124,13 +124,13 @@ namespace FinalProjectContemporaryProgramming.Controllers
         {
             if (IdExists(id))
             {
-                Get().Remove(GetNickById(id));
+                DBContext.Context.NickTable.Remove(GetNickById(id));
                 DBContext.Context.SaveChanges();
                 return Ok(new { Title = "Successfully Deleted", Message = "Row with ID: " + id + " has been deleted." });
             }
             return StatusCode(404, NotFoundMessage);
         }
-        private bool IdExists(int id) => Get().Any(e => e.Id.Equals(id));
-        private NicksTable GetNickById(int id) => Get().First(e => e.Id == id);
+        private bool IdExists(int id) => DBContext.Context.NickTable.Any(e => e.Id.Equals(id));
+        private NicksTable GetNickById(int id) => DBContext.Context.NickTable.First(e => e.Id == id);
     }
 }
