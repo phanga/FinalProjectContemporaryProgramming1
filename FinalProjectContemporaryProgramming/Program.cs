@@ -17,6 +17,7 @@ namespace FinalProjectContemporaryProgramming
         [STAThread]
         public static void Main(string[] args)
         {
+            MessageBox.Show("Select .mdf File");
             if (Prompt())
                 CreateHostBuilder(args).Build().Run();
         }
