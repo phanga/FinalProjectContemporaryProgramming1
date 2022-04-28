@@ -89,16 +89,15 @@ namespace FinalProjectContemporaryProgramming.Controllers
             DBContext.Context.GabeTable.Update(m);
             DBContext.Context.SaveChanges();
             return StatusCode(202, m);
-        
         }
         private int GetNextAvailableID()
         {
-            int i = 0;
+            int i = 1;
             while (IdExists(i))
                 i++;
             return i;
         }
-
+       
         [HttpDelete]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
