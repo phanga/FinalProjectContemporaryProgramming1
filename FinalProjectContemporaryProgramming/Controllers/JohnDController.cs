@@ -36,7 +36,7 @@ namespace FinalProjectContemporaryProgramming.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status406NotAcceptable)]
-        public ActionResult Post([FromQuery] string FirstName, [FromQuery] string LastName, [FromQuery] string FavoriteSport, [FromQuery] string FavoriteBoardGame, [FromQuery] string FavoriteVideoGame, [FromQuery] string FavoriteTVShow)
+        public ActionResult Post([FromQuery] string FirstName, [FromQuery] string LastName, [FromQuery] string FavoriteSport, [FromQuery] string FavoriteVideoGame, [FromQuery] string FavoriteTVShow)
         {
             var added = new JohnTable() { Id = GetNextAvailableID(), FirstName = FirstName, LastName = LastName, FavoriteSport = FavoriteSport, FavoriteVideoGame = FavoriteVideoGame, FavoriteTvshow = FavoriteTVShow };
             DBContext.Context.Add(added);
@@ -47,7 +47,7 @@ namespace FinalProjectContemporaryProgramming.Controllers
         [HttpPatch]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status406NotAcceptable)]
-        public ActionResult Update([FromQuery] int id, [FromQuery] string FirstName = null, [FromQuery] string LastName = null, [FromQuery] string FavoriteSport = null, [FromQuery] string FavoriteBoardGame = null, [FromQuery] string FavoriteVideoGame = null, [FromQuery] string FavoriteTVShow = null)
+        public ActionResult Update([FromQuery] int id, [FromQuery] string FirstName = null, [FromQuery] string LastName = null, [FromQuery] string FavoriteSport = null, [FromQuery] string FavoriteVideoGame = null, [FromQuery] string FavoriteTVShow = null)
         {
             if (!IdExists(id))
                 return StatusCode(404,NotFoundMessage);
