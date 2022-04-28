@@ -22,6 +22,8 @@ namespace FinalProjectContemporaryProgramming.Controllers
 
         [HttpGet]
         [Route("All")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public IEnumerable<JohnTable> Get() => DBContext.Context.JohnTable;
         public ActionResult Get([FromQuery] int id)
         {
@@ -44,6 +46,11 @@ namespace FinalProjectContemporaryProgramming.Controllers
             DBContext.Context.SaveChanges();
             return StatusCode(StatusCodes.Status202Accepted, added);
         }
+
+        [HttpPatch]
+        [Route("ByID")]
+        [ProducesResponseType(StatusCodes.Status202Accepted)]
+        [ProducesResponseType(StatusCodes.Status406NotAcceptable)]
         public ActionResult Update([FromQuery] int id, [FromQuery] string FirstName = null, [FromQuery] string LastName = null, [FromQuery] string FavoriteSport = null, [FromQuery] string FavoriteBoardGame = null, [FromQuery] string FavoriteVideoGame = null, [FromQuery] string FavoriteTVShow = null)
         {
             if (!IdExists(id))
