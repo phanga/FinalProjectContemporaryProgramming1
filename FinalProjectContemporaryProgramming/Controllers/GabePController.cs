@@ -39,7 +39,7 @@ namespace FinalProjectContemporaryProgramming.Controllers
             {
                 return IdExists(id.Value) ? Ok(GetMainById(id.Value)) : StatusCode(404, NotFoundMessage);
             }
-            return Ok(DBContext.Context.NickTable.Take(5));
+            return Ok(DBContext.Context.GabeTable.Take(5));
         }
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
