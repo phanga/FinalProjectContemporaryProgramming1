@@ -20,25 +20,19 @@ namespace FinalProjectContemporaryProgramming.Controllers
             Message = "There is no row with that ID"
         };
 
-        [HttpGet]
-        [Route("All")]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public IEnumerable<JohnTable> Get() => DBContext.Context.JohnTable;
+        
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult Get([FromQuery] int id)
+        public ActionResult Get([FromQuery] int? id)
         {
-            if (IdExists(id))
+            if(id.HasValue && id.Value != 0)
             {
-                return Ok(GetJohnById(id));
+                return IdExists(id.Value) ? Ok(GetJohnById(id.Value)) : StatusCode(404, NotFoundMessage);
             }
-            else 
-            {
-                return StatusCode(StatusCodes.Status404NotFound, NotFoundMessage);
-            }
+            return Ok(DBContext.Context.JohnTable.Take(5));
         }
+
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status406NotAcceptable)]
@@ -94,7 +88,6 @@ namespace FinalProjectContemporaryProgramming.Controllers
                 DBContext.Context.JohnTable.Remove(GetJohnById(id));
                 DBContext.Context.SaveChanges();
                 return Ok(new CustomResponse() {Title = "Successfully Deleted", Message = "Row with ID: " + id + " has been deleted"});
-                DBContext.Context.SaveChanges();
             }
             return StatusCode(404, NotFoundMessage);
         }
