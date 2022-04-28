@@ -33,16 +33,13 @@ namespace FinalProjectContemporaryProgramming.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status302Found)]
         [Route("ByID")]
-        public ActionResult Get([FromQuery] int id)
+        public ActionResult Get([FromQuery] int? id)
         {
-            if (IdExists(id))
+            if (id.HasValue && id.Value != 0)
             {
-                return Ok(GetMainById(id));
+                return IdExists(id.Value) ? Ok(GetMainById(id.Value)) : StatusCode(404, NotFoundMessage);
             }
-            else
-            {
-                return StatusCode(StatusCodes.Status404NotFound, NotFoundMessage);
-            }
+            return Ok(DBContext.Context.NickTable.Take(5));
         }
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
