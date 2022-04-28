@@ -82,7 +82,6 @@ namespace FinalProjectContemporaryProgramming.Controllers
         {
             if (!IdExists(Id))
                 return StatusCode(404, NotFoundMessage);
-            Debug.WriteLine("Update not successful");
             return StatusCode(202, new {
                 Id,
                 FirstName,

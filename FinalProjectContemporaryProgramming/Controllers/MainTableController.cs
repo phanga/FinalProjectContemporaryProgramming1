@@ -50,9 +50,10 @@ namespace FinalProjectContemporaryProgramming.Controllers
 
         public ActionResult Post([FromQuery] string FullName, [FromQuery] DateTime Birthdate, [FromQuery] string CollegeProgram, [FromQuery] string YearInProgram)
         {
-            var added = new GabeTable() { ID = GetNextAvailableID(), FullName = FullName, Birthdate = Birthdate, CollegeProgram = CollegeProgram, YearInProgram = YearInProgram};
+            var added = new GabeTable() { ID = GetNextAvailableID(), FullName = FullName, Birthdate = Birthdate, CollegeProgram = CollegeProgram, YearInProgram = YearInProgram };
             DBContext.Context.Add(added);
-            return StatusCode(202, new Main());
+            DBContext.Context.SaveChanges();
+            return StatusCode(202, added);
         }
 
         [HttpPatch]
@@ -91,5 +92,5 @@ namespace FinalProjectContemporaryProgramming.Controllers
             return DBContext.Context.GabeTable.First(e => e.ID == id);
         }
     }
-   
+
 }
