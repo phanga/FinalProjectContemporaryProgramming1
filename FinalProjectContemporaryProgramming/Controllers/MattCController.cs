@@ -23,25 +23,15 @@ namespace FinalProjectContemporaryProgramming.Controllers
         };
 
         [HttpGet]
-        [Route("All")]
-        public IEnumerable<MattTable> Get()
-        {
-            return DBContext.Context.MattTable.ToList();
-        }
-        [HttpGet]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status302Found)]
-        [Route("ByID")]
-        public ActionResult Get([FromQuery] int Id)
+        public ActionResult Get([FromQuery] int? Id)
         {
-            if (IdExists(Id))
+            if (Id.HasValue && Id.Value != 0)
             {
-                return Ok(GetMattById(Id));
+                return IdExists(Id.Value) ? Ok(GetMattById(Id.Value)) : StatusCode(404, NotFoundMessage);
             }
-            else
-            {
-                return StatusCode(StatusCodes.Status404NotFound, NotFoundMessage);
-            }
+            return Ok(DBContext.Context.MattTable.Take(5));
         }
 
         [HttpPost]
@@ -98,7 +88,7 @@ namespace FinalProjectContemporaryProgramming.Controllers
         }
         private int GetNextAvailableID()
         {
-            int i = 0;
+            int i = 1;
             while (IdExists(i))
                 i++;
             return i;
