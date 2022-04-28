@@ -39,9 +39,9 @@ namespace FinalProjectContemporaryProgramming.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status406NotAcceptable)]
-        public ActionResult Post([FromQuery] string FirstName, [FromQuery] string LastName, [FromQuery] string FavoriteSport, [FromQuery] string FavoriteBoardGame, [FromQuery] string FavoriteVideoGame, [FromQuery] string FavoriteTVShow)
+        public ActionResult Post([FromQuery] string FirstName, [FromQuery] string LastName, [FromQuery] string FavoriteSport, [FromQuery] string FavoriteVideoGame, [FromQuery] string FavoriteTVShow)
         {
-            var added = new JohnTable() { Id = GetNextAvailableID(), FirstName = FirstName, LastName = LastName, FavoriteSport = FavoriteSport, FavoriteBoardGame = FavoriteBoardGame, FavoriteVideoGame = FavoriteVideoGame, FavoriteTvshow = FavoriteTVShow };
+            var added = new JohnTable() { Id = GetNextAvailableID(), FirstName = FirstName, LastName = LastName, FavoriteSport = FavoriteSport, FavoriteVideoGame = FavoriteVideoGame, FavoriteTvshow = FavoriteTVShow };
             DBContext.Context.Add(added);
             DBContext.Context.SaveChanges();
             return StatusCode(StatusCodes.Status202Accepted, added);
@@ -51,7 +51,7 @@ namespace FinalProjectContemporaryProgramming.Controllers
         [Route("ByID")]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status406NotAcceptable)]
-        public ActionResult Update([FromQuery] int id, [FromQuery] string FirstName = null, [FromQuery] string LastName = null, [FromQuery] string FavoriteSport = null, [FromQuery] string FavoriteBoardGame = null, [FromQuery] string FavoriteVideoGame = null, [FromQuery] string FavoriteTVShow = null)
+        public ActionResult Update([FromQuery] int id, [FromQuery] string FirstName = null, [FromQuery] string LastName = null, [FromQuery] string FavoriteSport = null, [FromQuery] string FavoriteVideoGame = null, [FromQuery] string FavoriteTVShow = null)
         {
             if (!IdExists(id))
                 return StatusCode(404,NotFoundMessage);
@@ -90,10 +90,11 @@ namespace FinalProjectContemporaryProgramming.Controllers
             if (IdExists(id))
             {
                 DBContext.Context.JohnTable.Remove(GetJohnById(id));
+                DBContext.Context.SaveChanges();
                 return Ok(new CustomResponse() {Title = "Successfully Deleted", Message = "Row with ID: " + id + " has been deleted"});
             }
             return StatusCode(404, NotFoundMessage);
-            DBContext.Context.SaveChanges();
+            
         }
 
         private bool IdExists(int id) => DBContext.Context.JohnTable.Any(e => e.Id == id);

@@ -98,7 +98,7 @@ namespace FinalProjectContemporaryProgramming.Controllers
         }
         private int GetNextAvailableID()
         {
-            int i = 0;
+            int i = 1;
             while (IdExists(i))
                 i++;
             return i;
