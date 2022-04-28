@@ -45,7 +45,6 @@ namespace FinalProjectContemporaryProgramming.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [Route("ByID")]
         public ActionResult Get([FromQuery] int? id)
         {
             if(id.HasValue && id.Value != 0)
