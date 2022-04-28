@@ -22,7 +22,7 @@ namespace FinalProjectContemporaryProgramming.Controllers
 
         [HttpGet]
         [Route("All")]
-        public DbSet<JohnTable> Get() => DBContext.Context.JohnTable;
+        public IEnumerable<JohnTable> Get() => DBContext.Context.JohnTable;
         public ActionResult Get([FromQuery] int id)
         {
             if (IdExists(id))
