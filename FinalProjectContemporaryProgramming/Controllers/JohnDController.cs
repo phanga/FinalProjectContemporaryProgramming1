@@ -44,7 +44,7 @@ namespace FinalProjectContemporaryProgramming.Controllers
             DBContext.Context.SaveChanges();
             return StatusCode(StatusCodes.Status202Accepted, added);
         }
-        public ActionResult Update([FromQuery] int id, [FromQuery] string Firstname = null, [FromQuery] string LastName = null, [FromQuery] string FavoriteSport = null, [FromQuery] string FavoriteBoardGame = null, [FromQuery] string FavoriteVideoGame = null, [FromQuery] string FavoriteTVShow = null)
+        public ActionResult Update([FromQuery] int id, [FromQuery] string FirstName = null, [FromQuery] string LastName = null, [FromQuery] string FavoriteSport = null, [FromQuery] string FavoriteBoardGame = null, [FromQuery] string FavoriteVideoGame = null, [FromQuery] string FavoriteTVShow = null)
         {
             if (!IdExists(id))
                 return StatusCode(404,NotFoundMessage);
@@ -52,8 +52,8 @@ namespace FinalProjectContemporaryProgramming.Controllers
             
             var j = GetJohnById(id);
             
-            if (Firstname != null)
-                j.FirstName = Firstname;
+            if (FirstName != null)
+                j.FirstName = FirstName;
             if (LastName != null)
                 j.LastName = LastName;
             if (FavoriteSport != null)
