@@ -45,8 +45,14 @@ namespace FinalProjectContemporaryProgramming.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status302Found)]
         [Route("ByID")]
-        public ActionResult Get([FromQuery] int id) => IdExists(id) ? Ok(GetNickById(id)) : StatusCode(404, NotFoundMessage);
-
+        public ActionResult Get([FromQuery] int? id)
+        {
+            if (id.HasValue && id.Value != 0)
+            {
+                return IdExists(id.Value) ? Ok(GetNickById(id.Value)) : StatusCode(404, NotFoundMessage);
+            }
+            return Ok(DBContext.Context.NickTable.Take(5));
+        }
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
