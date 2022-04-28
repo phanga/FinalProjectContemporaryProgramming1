@@ -32,7 +32,7 @@ namespace FinalProjectContemporaryProgramming.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status302Found)]
-        [Route("ByID")]
+        
         public ActionResult Get([FromQuery] int? id)
         {
             if (id.HasValue && id.Value != 0)
