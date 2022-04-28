@@ -82,14 +82,20 @@ namespace FinalProjectContemporaryProgramming.Controllers
         {
             if (!IdExists(Id))
                 return StatusCode(404, NotFoundMessage);
-            return StatusCode(202, new {
-                Id,
-                FirstName,
-                LastName,
-                FavoriteBreakfeast,
-                FavoriteDinner,
-                FavoriteDessert
-            });
+            var m = GetMattById(Id);
+            if (FirstName != null)
+                m.FirstName = FirstName;
+            if (LastName != null)
+                m.LastName = LastName;
+            if (FavoriteBreakfeast != null)
+                m.FavoriteBreakfeast = FavoriteBreakfeast;
+            if (FavoriteDinner != null)
+                m.FavoriteDinner = FavoriteDinner;
+            if (FavoriteDessert != null)
+                m.FavoriteDessert = FavoriteDessert;
+            DBContext.Context.MattTable.Update(m);
+            DBContext.Context.SaveChanges();
+            return StatusCode(202, m);
         }
         private int GetNextAvailableID()
         {
@@ -107,6 +113,7 @@ namespace FinalProjectContemporaryProgramming.Controllers
             if (IdExists(Id))
             {
                 DBContext.Context.MattTable.Remove(GetMattById(Id));
+                DBContext.Context.SaveChanges();
                 return Ok(new CustomResponse() { Title = "Successfully Deleted", Message = "Row with ID: " + Id + " has been deleted." });
             }
             return StatusCode(404, new { Id });
