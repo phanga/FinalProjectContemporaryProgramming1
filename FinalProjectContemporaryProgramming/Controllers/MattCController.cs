@@ -46,13 +46,12 @@ namespace FinalProjectContemporaryProgramming.Controllers
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
-        [ProducesResponseType(StatusCodes.Status406NotAcceptable)]
         public ActionResult Post(
-            [FromQuery] string FirstName, 
-            [FromQuery] string LastName, 
-            [FromQuery] string FavoriteBreakfeast, 
-            [FromQuery] string FavoriteDinner,
-            [FromQuery] string FavoriteDessert
+            [FromQuery] string FirstName,
+            [FromQuery] string LastName,
+            [FromQuery] string FavoriteBreakfeast = null,
+            [FromQuery] string FavoriteDinner = null,
+            [FromQuery] string FavoriteDessert = null
             )
         {
             var posted = new MattTable() { 
