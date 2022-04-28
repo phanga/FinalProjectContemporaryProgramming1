@@ -91,9 +91,9 @@ namespace FinalProjectContemporaryProgramming.Controllers
             {
                 DBContext.Context.JohnTable.Remove(GetJohnById(id));
                 return Ok(new CustomResponse() {Title = "Successfully Deleted", Message = "Row with ID: " + id + " has been deleted"});
+                DBContext.Context.SaveChanges();
             }
             return StatusCode(404, NotFoundMessage);
-            DBContext.Context.SaveChanges();
         }
 
         private bool IdExists(int id) => DBContext.Context.JohnTable.Any(e => e.Id == id);
