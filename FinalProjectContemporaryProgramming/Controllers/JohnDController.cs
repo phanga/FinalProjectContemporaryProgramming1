@@ -52,14 +52,12 @@ namespace FinalProjectContemporaryProgramming.Controllers
             
             var j = GetJohnById(id);
             
-            if (FirstName != null)
-                j.FirstName = FirstName;
+            if (Firstname != null)
+                j.FirstName = Firstname;
             if (LastName != null)
                 j.LastName = LastName;
             if (FavoriteSport != null)
                 j.FavoriteSport = FavoriteSport;
-            if (FavoriteBoardGame != null)
-                j.FavoriteBoardGame = FavoriteBoardGame;
             if (FavoriteVideoGame != null)
                 j.FavoriteVideoGame = FavoriteVideoGame;
             if (FavoriteTVShow != null)
@@ -88,6 +86,7 @@ namespace FinalProjectContemporaryProgramming.Controllers
                 return Ok(new CustomResponse() {Title = "Successfully Deleted", Message = "Row with ID: " + id + " has been deleted"});
             }
             return StatusCode(404, NotFoundMessage);
+            DBContext.Context.SaveChanges();
         }
 
         private bool IdExists(int id) => DBContext.Context.JohnTable.Any(e => e.Id == id);
