@@ -90,6 +90,7 @@ namespace FinalProjectContemporaryProgramming.Controllers
             if (IdExists(id))
             {
                 DBContext.Context.JohnTable.Remove(GetJohnById(id));
+                DBContext.Context.SaveChanges();
                 return Ok(new CustomResponse() {Title = "Successfully Deleted", Message = "Row with ID: " + id + " has been deleted"});
                 DBContext.Context.SaveChanges();
             }
