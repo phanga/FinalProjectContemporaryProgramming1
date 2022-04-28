@@ -58,8 +58,6 @@ namespace FinalProjectContemporaryProgramming.Controllers
                 j.LastName = LastName;
             if (FavoriteSport != null)
                 j.FavoriteSport = FavoriteSport;
-            if (FavoriteBoardGame != null)
-                j.FavoriteBoardGame = FavoriteBoardGame;
             if (FavoriteVideoGame != null)
                 j.FavoriteVideoGame = FavoriteVideoGame;
             if (FavoriteTVShow != null)
