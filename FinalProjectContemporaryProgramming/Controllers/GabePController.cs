@@ -55,11 +55,13 @@ namespace FinalProjectContemporaryProgramming.Controllers
             [FromQuery] string YearInProgram
             )
         {
-            var added = new GabeTable() { ID = GetNextAvailableID(), 
+            var added = new GabeTable() { 
+                ID = GetNextAvailableID(), 
                 FullName = FullName, 
                 Birthdate = Birthdate, 
                 CollegeProgram = CollegeProgram, 
-                YearInProgram = YearInProgram };
+                YearInProgram = YearInProgram 
+            };
 
             DBContext.Context.Add(added);
             DBContext.Context.SaveChanges();
@@ -78,13 +80,19 @@ namespace FinalProjectContemporaryProgramming.Controllers
         {
             if (!IdExists(id))
                 return StatusCode(404, NotFoundMessage);
-            return StatusCode(202, new { 
-                id, 
-                FullName, 
-                Birthdate, 
-                CollegeProgram,
-                YearInProgram
-            });
+            var m = GetMainById(id);
+            if (FullName != null)
+                m.FullName = FullName;
+            if (Birthdate != null)
+                m.Birthdate = Birthdate;
+            if (CollegeProgram != null)
+                m.CollegeProgram = CollegeProgram;
+            if (YearInProgram != null)
+                m.YearInProgram = YearInProgram;
+            DBContext.Context.GabeTable.Update(m);
+            DBContext.Context.SaveChanges();
+            return StatusCode(202, m);
+        
         }
         private int GetNextAvailableID()
         {
@@ -102,6 +110,7 @@ namespace FinalProjectContemporaryProgramming.Controllers
             if (IdExists(id))
             {
                 DBContext.Context.GabeTable.Remove(GetMainById(id));
+                DBContext.Context.SaveChanges();
                 return Ok(new CustomResponse() { Title = "Successfully Deleted", Message = "Row with ID: " + id + " has been deleted." });
             }
             return StatusCode(404, new { id });
